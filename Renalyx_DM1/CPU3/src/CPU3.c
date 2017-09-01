@@ -50,6 +50,7 @@ volatile uint32_t count=0,count1=0,count_2=0;
 volatile uint32_t count_test=0,flag_test=0;
 TwobyteData data_stream;
 extern time_tick;
+extern uint8_t OneSecFlag;
 tick_time cpu3_time;
 cpu3_state state_3 = CPU3_STANDBY;
 openfill_state openfillstate = STATE_IDLE;
@@ -200,6 +201,7 @@ int main (void)
 	prev_status_bic=status_bic;
 	prev_status_fdbck=status_fdbck;
 	uint32_t stepcount = 1312499; // sanjeer - this is original value
+	uint32_t secondcount = (1312499/2) + 328124 ;
 //	uint32_t stepcount = 1351873; // changed to get right cond for clinical trial, need to re fix after adjusting angles again
 //		uint32_t stepcount = 797782;
 	uint32_t stepcount1 = 6562;
@@ -211,18 +213,15 @@ PIOB->PIO_PER = 1 << 19 ; //TEST
 PIOB->PIO_OER = 1 << 19 ; //TEST
 
 
-
-// bic_rc = 210;
+// 
+//  bic_rc = 210;
 // start_bicarpump();
-// 
-// rc = 210;
-// 
-// 
-// start_acidpump();
-// 	while (1)
-// 	{
-// 		;
-// 	}
+//  rc = 210;
+//  start_acidpump();
+//  	while (1)
+//  	{
+//  		;
+//  	}
 // 		
 // 		
 // 		
@@ -337,7 +336,7 @@ PIOB->PIO_OER = 1 << 19 ; //TEST
 				
 				
 		}
- 		if ((flag_nrmal == 1) && (flag_1 == 1) && (flag_1b == 1))
+ 		if ((flag_nrmal == 1) && (flag_1 == 1) && (flag_1b == 1) && (OneSecFlag == 1))
 		{
 			status_fdbck=(((PIOC->PIO_PDSR)>>26)&1);
 			
@@ -350,6 +349,8 @@ PIOB->PIO_OER = 1 << 19 ; //TEST
 				start_acidpump();
 				start_bicarpump();
 				//tc_stop(TC0,2);
+				OneSecFlag = 0;
+				startTimerSec(TC0,4,TC4_IRQn,secondcount);
 				startTimer1(TC0,2,TC2_IRQn,stepcount);
 			}
 			prev_status_fdbck= status_fdbck;
@@ -428,12 +429,13 @@ PIOB->PIO_OER = 1 << 19 ; //TEST
 							break;
 							case PROP_START_ALIGMENT:
 		//					printf("start_aligment\n");
+							flag_1=0;
+							flag_1b=0;
 							flag_nrmal=0;
 								state_3 = IDLE_ACID;
 							break;
 							case PROP_START_DISINFECTION:
 								rc=210;
-								bic_rc=210;
 								start_acidpump();
 								state_3 = CPU3_STANDBY;
 							break;
@@ -443,7 +445,6 @@ PIOB->PIO_OER = 1 << 19 ; //TEST
 							break;
 							case PROP_START_CITRIC_DISINFECTION:
 								bic_rc=210;
-								rc = 210;
 								start_bicarpump();
 								state_3 = CPU3_STANDBY;
 							break;
@@ -452,62 +453,132 @@ PIOB->PIO_OER = 1 << 19 ; //TEST
 								state_3 = CPU3_STANDBY;
 							break;
 							case PROP_START_MIXING:
+							OneSecFlag = 1 ;
 								switch(User_setConductivity)
 									{
 										case 135:
-											rc= 187;
-											bic_rc = 187;
+											rc= 213;
+											bic_rc = 213;
 										break;
 										
-										case 137:
-											rc= 181;
-											bic_rc = 181;
+										case 136:
+ 											rc= 210;
+ 											bic_rc = 210;
+ 										break;
+									
+ 										case 137:
+ 											rc= 210;
+ 											bic_rc = 210;
+ 										break;
+ 										
+										case 138:
+											rc= 207;
+											bic_rc = 207;
 										break;
 										
 										case 139:
-											rc= 178;
-											bic_rc = 178;
+											rc= 207;
+											bic_rc = 207;
+										break;
+										
+										case 140:
+											rc= 204;
+											bic_rc = 204;
 										break;
 										
 										case 141:
-											rc= 175;
-											bic_rc = 175;
+											rc= 204;
+											bic_rc = 204;
+										break;
+										
+										case 142:
+											rc= 201;
+											bic_rc = 201;
 										break;
 										
 										case 143:
-											rc= 170;
-											bic_rc = 170;
+											rc= 201;
+											bic_rc = 201;
+										break;
+										
+										case 144:
+											rc= 198;
+											bic_rc = 198;
 										break;
 										
 										case 145:
-											rc= 164;
-											bic_rc = 164;
-										break;
-										
-// 										case 141:
-// 											rc= 175;
-// 											bic_rc = 175;
-// 										break;
-// 										
-// 										case 142:
-// 											rc= 172;
-// 											bic_rc = 172;
-// 										break;
-// 										
-// 										case 143:
-// 											rc= 169;
-// 											bic_rc = 169;
-// 										break;
-// 										
-// 										case 144:
-// 											rc= 166;
-// 											bic_rc = 166;
-// 										break;
-										
-										default: 
-											rc= 187;                               // 134 sodium
-											bic_rc = 187;
-										break;				
+											rc= 198;
+											bic_rc = 198;
+										break;		
+												case 146:
+												rc= 195;
+												bic_rc = 195;
+												break;
+												
+												case 147:
+												rc= 195;
+												bic_rc = 195;
+												break;
+												
+												case 148:
+												rc= 192;
+												bic_rc = 192;
+												break;
+												
+												case 149:
+												rc= 192;
+												bic_rc = 192;
+												break;
+												
+												case 150:
+												rc= 189;
+												bic_rc = 189;
+												break;
+												
+												case 151:
+												rc= 189;
+												bic_rc = 189;
+												break;
+												
+												case 152:
+												rc= 186;
+												bic_rc = 186;
+												break;
+												
+												case 153:
+												rc= 186;
+												bic_rc = 186;
+												break;
+												
+												case 154:
+												rc= 183;
+												bic_rc = 183;
+												break;	
+												case 155:
+												rc= 183;
+												bic_rc = 183;
+												break;
+												
+												case 156:
+												rc= 180;
+												bic_rc = 180;
+												break;
+												
+												case 157:
+												rc= 180;
+												bic_rc = 180;
+												break;
+												
+												case 158:
+												rc= 177;
+												bic_rc = 177;
+												break;
+												
+												case 159:
+												rc= 177;
+												bic_rc = 177;
+												break;
+												
 														
 									}
 						

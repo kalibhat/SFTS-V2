@@ -240,8 +240,7 @@
       <ToolNumber>28014956</ToolNumber>
       <ToolName>SAM-ICE</ToolName>
     </com_atmel_avrdbg_tool_samice>
-    <avrtoolinterface>
-    </avrtoolinterface>
+    <avrtoolinterface>JTAG</avrtoolinterface>
     <preserveEEPROM>true</preserveEEPROM>
     <ExternalProgrammingToolCommand />
     <avrtoolserialnumber>28014956</avrtoolserialnumber>
