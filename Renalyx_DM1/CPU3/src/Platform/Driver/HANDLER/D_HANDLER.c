@@ -218,21 +218,24 @@ void TC2_Handler()
 }
 void TC3_Handler()
 {
+	OneSecFlag = 1;
 	
 	if ((tc_get_status(TC1, 0) & TC_SR_CPCS) == TC_SR_CPCS)
 	{
 		
 	}
+	tc_stop(TC1,0);
 }
 
-void TC4_Handler(){
+void TC7_Handler(){
 	
 	OneSecFlag = 1;
 	
-	if ((tc_get_status(TC0, 4) & TC_SR_CPCS) == TC_SR_CPCS)
+	if ((tc_get_status(TC2, 1) & TC_SR_CPCS) == TC_SR_CPCS)
 	{
 		
 	}
+	tc_stop(TC2,1);
 	
 }
 

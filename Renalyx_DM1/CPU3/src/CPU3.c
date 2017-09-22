@@ -201,7 +201,7 @@ int main (void)
 	prev_status_bic=status_bic;
 	prev_status_fdbck=status_fdbck;
 	uint32_t stepcount = 1312499; // sanjeer - this is original value
-	uint32_t secondcount = (1312499/2) + 328124 ;
+	uint32_t secondcount = (1312499/2 )  ;   // + 328124
 //	uint32_t stepcount = 1351873; // changed to get right cond for clinical trial, need to re fix after adjusting angles again
 //		uint32_t stepcount = 797782;
 	uint32_t stepcount1 = 6562;
@@ -336,7 +336,7 @@ PIOB->PIO_OER = 1 << 19 ; //TEST
 				
 				
 		}
- 		if ((flag_nrmal == 1) && (flag_1 == 1) && (flag_1b == 1) && (OneSecFlag == 1))
+ 		if ((flag_nrmal == 1) && (flag_1 == 1) && (flag_1b == 1) && (OneSecFlag == 1) )   //
 		{
 			status_fdbck=(((PIOC->PIO_PDSR)>>26)&1);
 			
@@ -350,8 +350,9 @@ PIOB->PIO_OER = 1 << 19 ; //TEST
 				start_bicarpump();
 				//tc_stop(TC0,2);
 				OneSecFlag = 0;
-				startTimerSec(TC0,4,TC4_IRQn,secondcount);
+				
 				startTimer1(TC0,2,TC2_IRQn,stepcount);
+				startTimer2(TC1,0,TC3_IRQn,secondcount);
 			}
 			prev_status_fdbck= status_fdbck;
 		}

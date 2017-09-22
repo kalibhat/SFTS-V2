@@ -18,7 +18,7 @@ void CPU3_D_INIT_TIMER()
 	pmc_enable_periph_clk(ID_TC0);
 	pmc_enable_periph_clk(ID_TC1);
 	pmc_enable_periph_clk(ID_TC3);
-	pmc_enable_periph_clk(ID_TC4);
+	pmc_enable_periph_clk(ID_TC7);
 	pmc_enable_periph_clk(ID_TC6);
 	TC0->TC_CHANNEL[0].TC_CMR = TC_CMR_WAVE|TC_CMR_WAVSEL_UP_RC |TC_CMR_TCCLKS_TIMER_CLOCK4;
 	TC0->TC_CHANNEL[1].TC_CMR = TC_CMR_WAVE|TC_CMR_WAVSEL_UP_RC |TC_CMR_TCCLKS_TIMER_CLOCK4;
@@ -27,12 +27,14 @@ void CPU3_D_INIT_TIMER()
 	TC1->TC_CHANNEL[1].TC_CMR = TC_CMR_WAVE|TC_CMR_WAVSEL_UP_RC |TC_CMR_TCCLKS_TIMER_CLOCK4;
 	
 	TC2->TC_CHANNEL[0].TC_CMR = TC_CMR_WAVE|TC_CMR_WAVSEL_UP_RC |TC_CMR_TCCLKS_TIMER_CLOCK4;
+	TC2->TC_CHANNEL[1].TC_CMR = TC_CMR_WAVE|TC_CMR_WAVSEL_UP_RC |TC_CMR_TCCLKS_TIMER_CLOCK4;
 	
 	TC0->TC_CHANNEL[0].TC_IER = TC_IER_CPCS;
 	TC0->TC_CHANNEL[1].TC_IER = TC_IER_CPCS;
 	TC1->TC_CHANNEL[0].TC_IER = TC_IER_CPCS;
 	TC1->TC_CHANNEL[1].TC_IER = TC_IER_CPCS;
 	TC2->TC_CHANNEL[0].TC_IER = TC_IER_CPCS;
+	TC2->TC_CHANNEL[1].TC_IER = TC_IER_CPCS;
 }
 
 
@@ -75,11 +77,11 @@ void startTimerSec(Tc *tc, uint32_t channel, IRQn_Type irq, uint32_t stepcount)
 {
 	//printf("h\n");
 	pmc_set_writeprotect(0);
-	pmc_enable_periph_clk(ID_TC4);
+	pmc_enable_periph_clk(ID_TC7);
 	tc_init(tc, channel, TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC |TC_CMR_TCCLKS_TIMER_CLOCK4);
-	TC0->TC_CHANNEL[2].TC_CMR = TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC |TC_CMR_TCCLKS_TIMER_CLOCK4;
+	TC2->TC_CHANNEL[1].TC_CMR = TC_CMR_WAVE | TC_CMR_WAVSEL_UP_RC |TC_CMR_TCCLKS_TIMER_CLOCK4;
 	tc_write_rc(tc, channel, stepcount);
-	tc_enable_interrupt(TC0,2,TC_IER_CPCS);
+	tc_enable_interrupt(TC2,1,TC_IER_CPCS);
 	tc_start(tc, channel);
 }
 
